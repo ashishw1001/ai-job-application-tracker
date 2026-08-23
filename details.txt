@@ -1,0 +1,145 @@
+🚀 Building an AI-Powered Job Application Tracker
+
+While working on my job-search automation workflow, I wanted to solve a simple but repetitive problem:
+
+➡️ Open a job posting
+➡️ Read the complete JD
+➡️ Identify required skills
+➡️ Compare them with my technical profile
+➡️ Copy the information into Excel/Google Sheets
+➡️ Track applications manually
+
+So I started building a small automation platform to bring these steps together.
+
+### 🔧 Current Implementation
+
+The workflow is:
+
+Job URL
+↓
+Playwright
+↓
+Job Page Extraction
+↓
+Google Gemini
+↓
+Structured JSON
+↓
+Skill Matching
+↓
+Google Sheets API
+↓
+Web UI
+
+### 🧩 Technology Stack
+
+• Python
+• Flask
+• Playwright
+• Google Gemini API
+• Google Sheets API
+• gspread
+• Google Cloud Service Account
+• HTML / CSS / JavaScript
+
+### 🤖 What Gemini Handles
+
+The AI layer extracts and analyzes:
+
+• Company
+• Job Title
+• Location
+• Work Mode
+• Experience
+• Required Skills
+• Preferred Skills
+• Education
+• Responsibilities
+• Job Description
+• Matching Skills
+• Missing Skills
+• Skills Match
+• Match Percentage
+• Application Recommendation
+
+For example, instead of manually reading a JD, the system can return structured information such as:
+
+```text
+Skills Match: High
+Match Percentage: 90%
+
+Matching:
+Java
+Spring Boot
+Microservices
+REST APIs
+Docker
+Kubernetes
+
+Missing:
+LLM Architecture
+```
+
+### 📊 Google Sheets Integration
+
+Rather than automating the Google Sheets UI using browser clicks, I integrated the Google Sheets API.
+
+The application dynamically maps data using the spreadsheet headers and checks the Job Link before inserting a record.
+
+This allows the system to:
+
+✓ Add new jobs
+✓ Detect duplicate URLs
+✓ Update existing records
+✓ Preserve the existing spreadsheet structure
+
+### 📚 Documentation Focus
+
+One thing I'm intentionally focusing on while building this project is documentation.
+
+The README covers:
+
+• System architecture
+• Component responsibilities
+• Installation
+• Google Cloud configuration
+• Service account setup
+• Gemini configuration
+• End-to-end execution flow
+• API integration
+• Data flow
+• Error handling
+• Security considerations
+• Known limitations
+• Future architecture
+• Enhancement roadmap
+
+For me, good documentation is not just about explaining how to run the code.
+
+It should explain **why the system is designed this way, how the components communicate, what assumptions are made, and how the project can evolve.**
+
+### 🔐 Security Considerations
+
+The project also follows basic credential-management practices:
+
+• API keys stored in environment variables
+• Google service-account credentials kept outside source control
+• `.env` and credential files excluded through `.gitignore`
+• No secrets exposed to the frontend
+
+### 🚀 What's Next?
+
+I'm planning to extend this MVP with:
+
+→ Live processing status
+→ Better JD extraction for Workday, Oracle, iCIMS, Greenhouse and other portals
+→ Resume-to-JD matching
+→ Resume improvement recommendations
+→ Application analytics dashboard
+→ Interview and follow-up tracking
+→ Background job processing
+→ Docker-based deployment
+
+This project started as a personal automation idea, but it has become a practical exercise in combining **AI, browser automation, APIs, backend development, and documentation into one end-to-end system.**
+
+#Python #GenerativeAI #Gemini #Playwright #Flask #Automation #GoogleCloud #GoogleSheets #AI #SoftwareEngineering #BackendDevelopment #Java #JobAutomation #Documentation

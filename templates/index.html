@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Job Application Automation</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f6f8;
+
+            color: #222;
+        }
+
+        .container {
+
+            max-width: 1100px;
+
+            margin: 40px auto;
+
+            padding: 0 20px;
+        }
+
+        .header {
+
+            background: #ffffff;
+
+            padding: 25px;
+
+            border-radius: 12px;
+
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0,0,0,0.08);
+        }
+
+        .header h1 {
+
+            margin: 0 0 8px 0;
+        }
+
+        .header p {
+
+            margin: 0;
+
+            color: #666;
+        }
+
+        .card {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 12px;
+
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0,0,0,0.08);
+        }
+
+        label {
+
+            display: block;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+        input {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+        }
+
+        button {
+
+            margin-top: 15px;
+
+            padding: 13px 25px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #1a73e8;
+
+            color: white;
+
+            font-size: 15px;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+
+            background: #1557b0;
+        }
+
+        button:disabled {
+
+            background: #aaa;
+
+            cursor: not-allowed;
+        }
+
+        .loading {
+
+            display: none;
+
+            margin-top: 15px;
+
+            color: #555;
+        }
+
+        .error {
+
+            display: none;
+
+            background: #ffe5e5;
+
+            padding: 15px;
+
+            border-radius: 8px;
+
+            margin-top: 15px;
+
+            color: #b00020;
+        }
+
+        .result {
+
+            display: none;
+        }
+
+        .grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+        }
+
+        .field {
+
+            background: #f7f8fa;
+
+            padding: 15px;
+
+            border-radius: 8px;
+        }
+
+        .field-title {
+
+            font-size: 12px;
+
+            color: #777;
+
+            margin-bottom: 5px;
+
+            text-transform: uppercase;
+        }
+
+        .field-value {
+
+            font-weight: bold;
+        }
+
+        .skills {
+
+            margin-top: 20px;
+        }
+
+        .skills span {
+
+            display: inline-block;
+
+            padding: 7px 10px;
+
+            margin: 4px;
+
+            background: #eef3ff;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+        }
+
+        .sheet-status {
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            background: #e8f5e9;
+
+            border-radius: 8px;
+        }
+
+        pre {
+
+            white-space: pre-wrap;
+
+            word-wrap: break-word;
+
+            background: #f7f7f7;
+
+            padding: 15px;
+
+            border-radius: 8px;
+
+            max-height: 400px;
+
+            overflow: auto;
+        }
+
+        @media(max-width: 700px) {
+
+            .grid {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div class="header">
+
+        <h1>
+            Job Application Automation
+        </h1>
+
+        <p>
+            Playwright → Gemini → Google Sheets
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <label for="jobUrl">
+            Job Application URL
+        </label>
+
+        <input
+            id="jobUrl"
+            type="url"
+            placeholder="https://careers.example.com/job/123"
+        >
+
+        <button
+            id="analyzeButton"
+            onclick="analyzeJob()"
+        >
+            Analyze Job
+        </button>
+
+        <div
+            id="loading"
+            class="loading"
+        >
+            Processing job URL... This may take a few seconds.
+        </div>
+
+        <div
+            id="error"
+            class="error"
+        ></div>
+
+    </div>
+
+
+    <div
+        id="result"
+        class="card result"
+    >
+
+        <h2>
+            Job Details
+        </h2>
+
+
+        <div class="grid">
+
+
+            <div class="field">
+
+                <div class="field-title">
+                    Company
+                </div>
+
+                <div
+                    id="company"
+                    class="field-value"
+                ></div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="field-title">
+                    Job Title
+                </div>
+
+                <div
+                    id="jobTitle"
+                    class="field-value"
+                ></div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="field-title">
+                    Location
+                </div>
+
+                <div
+                    id="location"
+                    class="field-value"
+                ></div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="field-title">
+                    Work Mode
+                </div>
+
+                <div
+                    id="workMode"
+                    class="field-value"
+                ></div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="field-title">
+                    Experience
+                </div>
+
+                <div
+                    id="experience"
+                    class="field-value"
+                ></div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="field-title">
+                    Skills Match
+                </div>
+
+                <div
+                    id="skillsMatch"
+                    class="field-value"
+                ></div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="field-title">
+                    Match Percentage
+                </div>
+
+                <div
+                    id="matchPercentage"
+                    class="field-value"
+                ></div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="field-title">
+                    Recommendation
+                </div>
+
+                <div
+                    id="recommendation"
+                    class="field-value"
+                ></div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="skills">
+
+            <h3>
+                Required Skills
+            </h3>
+
+            <div id="requiredSkills"></div>
+
+        </div>
+
+
+        <div class="skills">
+
+            <h3>
+                Preferred Skills
+            </h3>
+
+            <div id="preferredSkills"></div>
+
+        </div>
+
+
+        <div class="skills">
+
+            <h3>
+                Matching Skills
+            </h3>
+
+            <div id="matchingSkills"></div>
+
+        </div>
+
+
+        <div class="skills">
+
+            <h3>
+                Missing Skills
+            </h3>
+
+            <div id="missingSkills"></div>
+
+        </div>
+
+
+        <div class="sheet-status">
+
+            <strong>
+                Google Sheets:
+            </strong>
+
+            <span id="sheetStatus"></span>
+
+        </div>
+
+
+        <h3>
+            Job Description
+        </h3>
+
+        <pre id="jobDescription"></pre>
+
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+async function analyzeJob() {
+
+
+    const url =
+        document
+        .getElementById("jobUrl")
+        .value
+        .trim();
+
+
+    if (!url) {
+
+        showError(
+            "Please enter a job URL."
+        );
+
+        return;
+    }
+
+
+    const button =
+        document
+        .getElementById("analyzeButton");
+
+
+    const loading =
+        document
+        .getElementById("loading");
+
+
+    const result =
+        document
+        .getElementById("result");
+
+
+    button.disabled = true;
+
+    loading.style.display = "block";
+
+    result.style.display = "none";
+
+    hideError();
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/api/analyze",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        url: url
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok ||
+            !data.success) {
+
+            throw new Error(
+                data.error ||
+                "Unable to process job."
+            );
+        }
+
+
+        displayResult(
+            data
+        );
+
+
+    } catch(error) {
+
+        showError(
+            error.message
+        );
+
+    } finally {
+
+        button.disabled = false;
+
+        loading.style.display = "none";
+    }
+
+}
+
+
+function displayResult(data) {
+
+
+    const job = data.job;
+
+
+    document
+        .getElementById("company")
+        .textContent =
+            job.company || "Not Mentioned";
+
+
+    document
+        .getElementById("jobTitle")
+        .textContent =
+            job.job_title || "Not Mentioned";
+
+
+    document
+        .getElementById("location")
+        .textContent =
+            job.location || "Not Mentioned";
+
+
+    document
+        .getElementById("workMode")
+        .textContent =
+            job.work_mode || "Not Mentioned";
+
+
+    document
+        .getElementById("experience")
+        .textContent =
+            job.experience || "Not Mentioned";
+
+
+    document
+        .getElementById("skillsMatch")
+        .textContent =
+            job.skills_match || "Not Mentioned";
+
+
+    document
+        .getElementById("matchPercentage")
+        .textContent =
+            (job.match_percentage || 0)
+            + "%";
+
+
+    document
+        .getElementById("recommendation")
+        .textContent =
+            job.recommendation ||
+            "Not Mentioned";
+
+
+    renderSkills(
+        "requiredSkills",
+        job.required_skills
+    );
+
+
+    renderSkills(
+        "preferredSkills",
+        job.preferred_skills
+    );
+
+
+    renderSkills(
+        "matchingSkills",
+        job.matching_skills
+    );
+
+
+    renderSkills(
+        "missingSkills",
+        job.missing_skills
+    );
+
+
+    document
+        .getElementById("jobDescription")
+        .textContent =
+            job.job_description ||
+            "Not Mentioned";
+
+
+    const sheet =
+        data.sheet;
+
+
+    document
+        .getElementById("sheetStatus")
+        .textContent =
+            sheet.action === "added"
+            ? "Job added successfully. Row " + sheet.row
+            : "Existing job updated. Row " + sheet.row;
+
+
+    document
+        .getElementById("result")
+        .style.display = "block";
+}
+
+
+function renderSkills(
+    elementId,
+    skills
+) {
+
+
+    const element =
+        document
+        .getElementById(elementId);
+
+
+    element.innerHTML = "";
+
+
+    if (!skills ||
+        skills.length === 0) {
+
+        element.textContent =
+            "None";
+
+        return;
+    }
+
+
+    skills.forEach(
+        skill => {
+
+            const span =
+                document.createElement(
+                    "span"
+                );
+
+            span.textContent =
+                skill;
+
+            element.appendChild(
+                span
+            );
+
+        }
+    );
+}
+
+
+function showError(message) {
+
+    const error =
+        document
+        .getElementById("error");
+
+    error.textContent =
+        message;
+
+    error.style.display =
+        "block";
+}
+
+
+function hideError() {
+
+    document
+        .getElementById("error")
+        .style.display =
+            "none";
+}
+
+
+</script>
+
+
+</body>
+
+</html>
