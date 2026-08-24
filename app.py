@@ -1,3 +1,8 @@
+import os
+
+# Force Playwright to use browsers installed inside the Python environment
+os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "0"
+
 from flask import (
     Flask,
     render_template,

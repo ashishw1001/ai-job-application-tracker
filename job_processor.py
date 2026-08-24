@@ -1,3 +1,8 @@
+import os
+
+# Force Playwright to use the browsers installed with the Python package
+os.environ.setdefault("PLAYWRIGHT_BROWSERS_PATH", "0")
+
 import json
 import re
 from datetime import datetime
@@ -8,8 +13,6 @@ from google.genai import types
 from google.oauth2.service_account import Credentials
 from playwright.sync_api import sync_playwright
 from dotenv import load_dotenv
-import os
-
 
 load_dotenv()
 
