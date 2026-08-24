@@ -4,6 +4,7 @@ from datetime import datetime
 
 import gspread
 from google import genai
+from google.genai import types
 from google.oauth2.service_account import Credentials
 from playwright.sync_api import sync_playwright
 from dotenv import load_dotenv
@@ -198,7 +199,10 @@ def clean_text(text):
 def analyze_job(job):
 
     client = genai.Client(
-        api_key=GEMINI_API_KEY
+        api_key=GEMINI_API_KEY,
+        http_options=types.HttpOptions(
+            timeout=120000
+        )
     )
 
     job_text = clean_text(
